@@ -17,8 +17,8 @@ class some_class():
     def __init__(self, limit, flag):
         if flag:
             self.PROCESS_IMAGES(limit)
-        #self.PROCESS_RTREE()
-        # self.LOAD_RTREE()
+        self.PROCESS_RTREE()
+        #self.LOAD_RTREE()
 
     # def LOAD_RTREE(self):
     #     try:
