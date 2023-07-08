@@ -85,7 +85,8 @@ class some_class():
         print('KNN_SEARCH_TREE')
         if hasattr(self, 'idx128d'):
             info = knn_search_rtree(file_name, k, cwd, self.indexed_dictionary, self.idx128d)
-            self.printing(info)       
+            self.printing(info)
+            return info    
         else:
             # if it is stored in a file, unpack it and use it
             pass

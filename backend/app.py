@@ -17,60 +17,87 @@ smt = some_class(14500, False) # true or false is a flag that indicates if it is
 def index():
     return render_template('index.html') 
 
-
+'''
 @app.route("/rangeSearch/<file>/<radius>", methods=['GET'])
 def rangeSearch(file, radius):
     res = smt.RANGE_SEARCH(file, radius)
     return res
-
-# AQUI ESTAMOS TRABAJANDO
-# @app.route("/KNNSearch/<file>/<k>", methods=['GET'])
-# def KNNSearch(file, k):
-#     k = int(k)
-#     res, tiempo = smt.KNN_SEARCH(file, k)
-#     print(res)
-#     print(tiempo)
-#     return render_template('result.html', data = res, tiempo = tiempo)
-
-@app.route("/KNNSearch/<file>/<k>", methods=['GET'])
+'''
+@app.route("/knnkdtree/<file>/<k>", methods=['GET'])
 def KNNSearch(file, k):
-    k = int(k)
+    if k <= 0:
+       k = 1
+    if file == '':
+       return {'ok':False, 'msg': 'Missing file'}, 400
+    image_path = cwd + '/test_images/' + file
+    if not os.path.exists(image_path):
+       return {'ok':False, 'msg': 'Image are not in test_images'}, 422 
+    
     res, tiempo = smt.KDTREE(file, k)
-    print(res)
-    print(tiempo)
-    return render_template('result.html', data = res, tiempo = tiempo, original = file)
+    
+    if len(res) == 0:
+       return {'ok':True, 'msg': 'No similar images found'}, 200
+    
+    return {'ok':True, 'data':res, 'time': tiempo },200
 
-
+'''
 @app.route("/ind/<file>/<radius>", methods=['GET'])
 def rangeSearchInd(file, radius):
     res = smt.RANGE_SEARCH_RTREE(file, radius)
     return res
+'''
 
-
-@app.route("/ind/<file>/<k>", methods=['GET'])
+@app.route("/knnrtree/<file>/<k>", methods=['GET'])
 def KNNSearchInd(file, k):
-    k = int(k)
-    if(k < 1):
-        k = 1
+    if k <= 0:
+       k = 1
+    if file == '':
+       return {'ok':False, 'msg': 'Missing file'}, 400
+    image_path = cwd + '/test_images/' + file
+    if not os.path.exists(image_path):
+       return {'ok':False, 'msg': 'Image are not in test_images'}, 422 
+    
     res = smt.KNN_SEARCH_RTREE(file, k)
-    error = ""
-    if (res == []):
-        error = "No se cargo nada"
-    return render_template('result.html', data = res, name = file, error = error, n = k)
+    
+    if len(res) == 0:
+       return {'ok':True, 'msg': 'No similar images found'}, 200 
+    
+    return  {'ok':True, 'data':res },200
 
 
-@app.route("/upload", methods=['POST'])
-def uploader():
+@app.route("/knnsearch/<file>/<k>", methods=['GET'])
+def KNNSearchInd(file, k):
+    if k <= 0:
+       k = 1
+    if file == '':
+       return {'ok':False, 'msg': 'Missing file'}, 400
+    image_path = cwd + '/test_images/' + file
+    if not os.path.exists(image_path):
+       return {'ok':False, 'msg': 'Image are not in test_images'}, 422 
+    
+    res, tiempo = smt.KNN_SEARCH(file, k)
+    
+    if len(res) == 0:
+       return {'ok':True, 'msg': 'No similar images found'}, 200 
+    
+    return  {'ok':True, 'data':res , 'time': tiempo},200
+
+
+@app.route("/upload/<method>", methods=['POST'])
+def uploader(method):
  if request.method == 'POST':
-  # obtenemos el archivo del input "archivo"
-  f = request.files['archivo']
-  k = request.form['K datos']
-  print(k)
-  filename = secure_filename(f.filename)
-  f.save(os.path.join(app.instance_path, 'uploads', secure_filename(f.filename)))
-  # Si se quiere eliminar el archivo usar remove(UPLOADS_PATH + filename)
-
-  return redirect(url_for('KNNSearch', file = filename, k = k))
+    # obtenemos el archivo del input "archivo"
+    if method == '':
+       return {'ok':False, 'msg': 'Missing method'}, 400
+    if method not in ['knnsearch', 'knnrtree', 'knnkdtree']:
+       return {'ok':False, 'msg': 'Invalid method'}, 422 
+    f = request.files['archivo']
+    k = request.form['K datos']
+    print(k)
+    filename = secure_filename(f.filename)
+    f.save(os.path.join(app.instance_path, 'uploads', secure_filename(f.filename)))
+    # Si se quiere eliminar el archivo usar remove(UPLOADS_PATH + filename)
+    return redirect(url_for(method, file = filename, k = k))
 
 
 if __name__ == '__main__':
