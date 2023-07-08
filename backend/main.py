@@ -9,6 +9,14 @@ cwd = os.getcwd() # current working directory
 processed_images_path = cwd + "/processed_dataset"
 filename = "processed_images.json"
 
+def clear_rtree_directory():
+        data_path = cwd + '/128d_index.data'
+        index_path = cwd + '/128d_index.index'
+        if os.path.exists(data_path):
+            os.remove(data_path)
+        if os.path.exists(index_path):
+            os.remove(index_path)
+
 class some_class():
     total = 13175
     block_dictionary = {}
@@ -28,7 +36,7 @@ class some_class():
     #         print("error loading rtree")
 
     def PROCESS_RTREE(self):
-        # clear_rtree_directory()
+        clear_rtree_directory()
         # 128d rtree index
         p = self.load_rtree_properties()
         self.idx128d = index.Index('128d_index', properties=p)
@@ -57,6 +65,7 @@ class some_class():
         p.dat_extension = 'data'
         p.idx_extension = 'index'
         return p
+        
 
     def PROCESS_IMAGES(self, limit):
         clear_processed_processes_directory()
