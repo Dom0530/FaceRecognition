@@ -24,7 +24,7 @@ def rangeSearch(file, radius):
     return res
 '''
 @app.route("/knnkdtree/<file>/<k>", methods=['GET'])
-def KNNSearch(file, k):
+def KNNSearchKD(file, k):
     if k <= 0:
        k = 1
     if file == '':
@@ -48,7 +48,7 @@ def rangeSearchInd(file, radius):
 '''
 
 @app.route("/knnrtree/<file>/<k>", methods=['GET'])
-def KNNSearchInd(file, k):
+def KNNSearchRT(file, k):
     if k <= 0:
        k = 1
     if file == '':
@@ -66,7 +66,7 @@ def KNNSearchInd(file, k):
 
 
 @app.route("/knnsearch/<file>/<k>", methods=['GET'])
-def KNNSearchInd(file, k):
+def KNNSearch(file, k):
     if k <= 0:
        k = 1
     if file == '':
@@ -83,13 +83,14 @@ def KNNSearchInd(file, k):
     return  {'ok':True, 'data':res , 'time': tiempo},200
 
 
-@app.route("/upload/<method>", methods=['POST'])
-def uploader(method):
+@app.route("/upload", methods=['POST'])
+def uploader():
  if request.method == 'POST':
     # obtenemos el archivo del input "archivo"
-    if method == '':
+    sm = request.form.get['metodo']
+    if sm == '':
        return {'ok':False, 'msg': 'Missing method'}, 400
-    if method not in ['knnsearch', 'knnrtree', 'knnkdtree']:
+    if sm not in ['knnsearch', 'knnrtree', 'knnkdtree']:
        return {'ok':False, 'msg': 'Invalid method'}, 422 
     f = request.files['archivo']
     k = request.form['K datos']
@@ -97,7 +98,7 @@ def uploader(method):
     filename = secure_filename(f.filename)
     f.save(os.path.join(app.instance_path, 'uploads', secure_filename(f.filename)))
     # Si se quiere eliminar el archivo usar remove(UPLOADS_PATH + filename)
-    return redirect(url_for(method, file = filename, k = k))
+    return redirect(url_for(sm, file = filename, k = k))
 
 
 if __name__ == '__main__':
