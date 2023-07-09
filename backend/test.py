@@ -13,9 +13,9 @@ def test():
     print(tiempo)
     # smt.RANGE_SEARCH_RTREE("Salma_Hayek.jpeg", 1.21) # que radio usamos?
     print()
-    res = smt.KNN_SEARCH_RTREE("Salma_Hayek.jpeg", 8)
+    res, tiempo = smt.KNN_SEARCH_RTREE("Salma_Hayek.jpeg", 8)
     print(res)
-    
+    print(tiempo)
     print()
     res, tiempo = smt.KDTREE("Salma_Hayek.jpeg", 8)
     print(res)

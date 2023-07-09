@@ -33,7 +33,7 @@ def knn_search_rtree(file_name, K, cwd, indexed_dictionary,idx):
             second = numpy.array(new_face_encoding[0])
             distance = numpy.linalg.norm(first - second)
             # if(previous_path != path):
-            result.append((path, round(distance, 3)))
+            result.append((round(distance, 3), path))
             # previous_path = path
             if counter > K:
               break
