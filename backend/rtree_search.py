@@ -38,9 +38,10 @@ def knn_search_rtree(file_name, K, cwd, indexed_dictionary,idx):
             if counter > K:
               break
             counter += 1
-          print("knn search rtree search took " + str(round((end-start)*1000, 3)) + " ms.")
+          tiempo = str(round((end-start)*1000))
+          print("knn search rtree search took " + tiempo + " ms.")
           print("displaying results:")
-          return result
+          return result, tiempo
 
 def range_search_rtree(file_name, radius, cwd, idx, indexed_dictionary):
       image_path = cwd + '/test_images/' + file_name

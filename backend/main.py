@@ -84,9 +84,9 @@ class some_class():
     def KNN_SEARCH_RTREE(self, file_name, k):
         print('KNN_SEARCH_TREE')
         if hasattr(self, 'idx128d'):
-            info = knn_search_rtree(file_name, k, cwd, self.indexed_dictionary, self.idx128d)
+            info, time = knn_search_rtree(file_name, k, cwd, self.indexed_dictionary, self.idx128d)
             self.printing(info)
-            return info    
+            return info, time 
         else:
             # if it is stored in a file, unpack it and use it
             pass
